@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nicode.js · Sistema de gestión para pollerías y distribuidoras</title>
+  <meta name="description" content="Ventas, stock en tiempo real, caja, cuentas corrientes y reparto en un solo sistema. Hecho en Tucumán y probado todos los días en Alenort.">
+  <meta property="og:title" content="Nicode.js · Sistema de gestión para pollerías y distribuidoras">
+  <meta property="og:description" content="Facturación, stock, caja, fiados y reparto en un solo lugar. Desde la computadora o el celular.">
+  <meta property="og:image" content="img/inicio_pc.webp">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#5e390b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238a5413'/%3E%3Ctext x='32' y='43' font-family='Arial' font-weight='700' font-size='30' fill='white' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --marron: #8a5413; --marron-osc: #5e390b; --marron-claro: #b47a2a;
+      --crema: #f7f0e4; --crema-2: #efe4d1; --fondo: #fffcf7; --tinta: #2a2118; --gris: #6b5f52;
+      --borde: #e6d9c4; --verde: #1f9d55; --sombra: 0 18px 40px -18px rgba(70, 42, 8, .35);
+      --radio: 18px; --ancho: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--tinta); background: var(--fondo); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.12; margin: 0; letter-spacing: -.01em; }
+    .contenedor { width: min(var(--ancho), 100% - 32px); margin: 0 auto; }
+    .seccion { padding: 96px 0; }
+    .etiqueta { display: inline-block; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--marron); margin-bottom: 14px; }
+    .titulo-seccion { font-size: clamp(1.9rem, 3.6vw, 2.8rem); color: var(--marron-osc); max-width: 760px; }
+    .bajada { font-size: 1.12rem; color: var(--gris); max-width: 680px; margin: 16px 0 0; }
+    .centrado { text-align: center; }
+    .centrado .titulo-seccion, .centrado .bajada { margin-left: auto; margin-right: auto; }
+
+    /* Botones */
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; font-weight: 700; font-size: 1rem; text-decoration: none; border: 0; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-wa { background: var(--verde); color: #fff; box-shadow: 0 10px 24px -10px rgba(31, 157, 85, .7); }
+    .btn-wa:hover { background: #188a49; }
+    .btn-sec { background: transparent; color: var(--marron-osc); border: 2px solid var(--borde); }
+    .btn-sec:hover { border-color: var(--marron-claro); }
+    .btn svg { width: 20px; height: 20px; flex: none; }
+
+    /* Encabezado */
+    header.barra { position: sticky; top: 0; z-index: 50; background: rgba(255, 252, 247, .88); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
+    header.barra.con-borde { border-color: var(--borde); }
+    .barra .contenedor { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; text-decoration: none; color: var(--marron-osc); }
+    .logo span.marca { width: 34px; height: 34px; border-radius: 10px; background: var(--marron); color: #fff; display: grid; place-items: center; font-family: 'Fraunces', serif; font-size: 1.1rem; }
+    nav.menu { display: flex; gap: 26px; font-weight: 600; font-size: .95rem; }
+    nav.menu a { text-decoration: none; color: var(--gris); }
+    nav.menu a:hover { color: var(--marron); }
+    .barra .btn { padding: 10px 18px; font-size: .92rem; }
+
+    /* Hero */
+    .hero { padding: 72px 0 40px; background: radial-gradient(1200px 500px at 85% -10%, #f3e3c6 0%, transparent 60%), var(--fondo); overflow: hidden; }
+    .hero .contenedor { display: grid; grid-template-columns: 1.02fr 1.18fr; gap: 48px; align-items: center; }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 3.9rem); color: var(--marron-osc); }
+    .hero h1 em { font-style: normal; color: var(--marron-claro); }
+    .hero p.lead { font-size: 1.2rem; color: #4a3f33; margin: 22px 0 30px; max-width: 540px; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+    .prueba-social { margin-top: 30px; display: flex; align-items: center; gap: 12px; color: var(--gris); font-size: .95rem; }
+    .prueba-social b { color: var(--marron-osc); }
+    .prueba-social .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 5px rgba(31, 157, 85, .15); flex: none; }
+    .escena { position: relative; padding-bottom: 40px; }
+    .notebook { border-radius: 14px; background: #1e1a16; padding: 10px 10px 14px; box-shadow: var(--sombra); }
+    .notebook img { border-radius: 6px; }
+    .notebook::after { content: ''; display: block; height: 10px; margin: 10px -28px -24px; background: linear-gradient(#cfc4b3, #a89c89); border-radius: 0 0 18px 18px; }
+    .telefono { width: 30%; max-width: 210px; border: 8px solid #1e1a16; border-radius: 30px; overflow: hidden; background: #1e1a16; box-shadow: var(--sombra); }
+    .telefono img { border-radius: 20px; }
+    .escena .telefono { position: absolute; right: -10px; bottom: 0; width: 23%; max-width: 160px; border-width: 6px; border-radius: 24px; }
+    .escena .telefono img { border-radius: 17px; }
+
+    /* Dolor */
+    .dolores { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
+    .dolor { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 22px; }
+    .dolor .antes { text-decoration: line-through; text-decoration-color: rgba(190, 50, 40, .55); color: var(--gris); font-weight: 600; }
+    .dolor .ahora { margin-top: 10px; font-weight: 700; color: var(--marron-osc); }
+    .dolor .ahora::before { content: '✓ '; color: var(--verde); }
+
+    /* Funciones */
+    .fondo-crema { background: var(--crema); }
+    .funciones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 48px; }
+    .funcion { background: var(--fondo); border: 1px solid var(--borde); border-radius: var(--radio); padding: 24px; }
+    .funcion .icono { width: 44px; height: 44px; border-radius: 12px; background: var(--crema-2); display: grid; place-items: center; font-size: 1.35rem; margin-bottom: 14px; }
+    .funcion h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.08rem; font-weight: 700; color: var(--marron-osc); }
+    .funcion p { margin: 8px 0 0; color: var(--gris); font-size: .95rem; }
+
+    /* Recorrido con pestañas */
+    .pestanas { display: flex; flex-wrap: wrap; gap: 8px; margin: 40px 0 28px; }
+    .pestana { border: 1px solid var(--borde); background: #fff; color: var(--gris); padding: 10px 16px; border-radius: 999px; font: 600 .95rem 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all .15s; }
+    .pestana:hover { color: var(--marron); border-color: var(--marron-claro); }
+    .pestana[aria-selected="true"] { background: var(--marron); color: #fff; border-color: var(--marron); }
+    .panel { display: none; grid-template-columns: 0.8fr 2fr; gap: 40px; align-items: start; }
+    .panel.activo { display: grid; animation: aparecer .35s ease; }
+    @keyframes aparecer { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .panel h3 { font-size: 1.9rem; color: var(--marron-osc); }
+    .panel p { color: #4a3f33; font-size: 1.05rem; }
+    .panel ul { padding: 0; margin: 18px 0 0; list-style: none; display: grid; gap: 10px; }
+    .panel li { padding-left: 28px; position: relative; color: #3d3328; }
+    .panel li::before { content: ''; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--verde) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath d='M8 13.2 4.8 10l-1.1 1.1L8 15.4l8.3-8.3-1.1-1.1z'/%3E%3C/svg%3E") center/14px no-repeat; }
+    .capturas { position: relative; padding-bottom: 30px; }
+    .capturas .pc { border-radius: 14px; overflow: hidden; border: 1px solid var(--borde); box-shadow: var(--sombra); cursor: zoom-in; background: #fff; }
+    .capturas .telefono { position: absolute; right: -14px; bottom: 0; width: 19%; max-width: 165px; border-width: 6px; border-radius: 24px; cursor: zoom-in; }
+    .capturas .telefono img { border-radius: 17px; }
+    .pista { font-size: .85rem; color: var(--gris); margin-top: 14px; }
+
+    /* Celular */
+    .telefonos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 52px; justify-items: center; }
+    .telefonos figure { margin: 0; text-align: center; }
+    .telefonos .telefono { width: 100%; max-width: 230px; cursor: zoom-in; }
+    .telefonos figcaption { margin-top: 14px; font-weight: 700; color: var(--marron-osc); }
+
+    /* Alenort */
+    .alenort { background: linear-gradient(150deg, var(--marron-osc), var(--marron) 60%, var(--marron-claro)); color: #fff; border-radius: 28px; padding: 64px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+    .alenort .etiqueta { color: #f3d9ad; }
+    .alenort h2 { font-size: clamp(1.9rem, 3.4vw, 2.6rem); }
+    .alenort p { color: #f6ead6; font-size: 1.08rem; }
+    .cifras { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cifra { background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .22); border-radius: 16px; padding: 20px; }
+    .cifra b { display: block; font-family: 'Fraunces', serif; font-size: 1.7rem; }
+    .cifra span { color: #f3e3c6; font-size: .92rem; }
+
+    /* Pasos */
+    .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; counter-reset: paso; }
+    .paso { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 28px; position: relative; }
+    .paso::before { counter-increment: paso; content: counter(paso); position: absolute; top: -18px; left: 24px; width: 38px; height: 38px; border-radius: 50%; background: var(--marron); color: #fff; display: grid; place-items: center; font-weight: 800; }
+    .paso h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; color: var(--marron-osc); margin-top: 8px; }
+    .paso p { color: var(--gris); margin: 8px 0 0; }
+
+    /* Preguntas */
+    .preguntas { max-width: 820px; margin: 44px auto 0; display: grid; gap: 12px; }
+    details { background: #fff; border: 1px solid var(--borde); border-radius: 14px; padding: 18px 22px; }
+    details[open] { border-color: var(--marron-claro); }
+    summary { cursor: pointer; font-weight: 700; color: var(--marron-osc); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; font-size: 1.4rem; line-height: 1; color: var(--marron); transition: transform .2s; }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { margin: 12px 0 0; color: #4a3f33; }
+
+    /* Contacto */
+    .contacto { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+    .tarjeta-contacto { background: #fff; border: 1px solid var(--borde); border-radius: 24px; padding: 34px; box-shadow: var(--sombra); }
+    .tarjeta-contacto h3 { font-size: 1.6rem; color: var(--marron-osc); }
+    .tarjeta-contacto .cargo { color: var(--gris); margin: 4px 0 24px; }
+    .dato { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid var(--borde); text-decoration: none; }
+    .dato .ic { width: 42px; height: 42px; border-radius: 12px; background: var(--crema); display: grid; place-items: center; flex: none; }
+    .dato .ic svg { width: 20px; height: 20px; }
+    .dato small { display: block; color: var(--gris); font-size: .8rem; }
+    .dato b { color: var(--tinta); word-break: break-word; }
+    a.dato:hover b { color: var(--marron); }
+
+    footer { padding: 36px 0 44px; border-top: 1px solid var(--borde); color: var(--gris); font-size: .9rem; }
+    footer .contenedor { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+    /* WhatsApp flotante */
+    .wa-flotante { position: fixed; right: 20px; bottom: 20px; z-index: 60; width: 60px; height: 60px; border-radius: 50%; background: var(--verde); display: grid; place-items: center; box-shadow: 0 12px 30px -8px rgba(0, 0, 0, .35); transition: transform .15s; }
+    .wa-flotante:hover { transform: scale(1.07); }
+    .wa-flotante svg { width: 32px; height: 32px; }
+
+    /* Visor de capturas */
+    .visor { position: fixed; inset: 0; z-index: 100; background: rgba(20, 14, 6, .88); display: none; align-items: center; justify-content: center; padding: 24px; cursor: zoom-out; }
+    .visor.abierto { display: flex; }
+    .visor img { max-width: min(1400px, 100%); max-height: 92vh; border-radius: 10px; box-shadow: 0 20px 60px rgba(0, 0, 0, .5); }
+    .visor button { position: absolute; top: 16px; right: 20px; background: rgba(255, 255, 255, .15); color: #fff; border: 0; width: 44px; height: 44px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; }
+
+    .revelar { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .revelar.visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .revelar { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+    @media (max-width: 980px) {
+      nav.menu { display: none; }
+      .hero .contenedor, .panel, .alenort, .contacto { grid-template-columns: 1fr; }
+      .hero { padding-top: 40px; }
+      .funciones, .dolores { grid-template-columns: repeat(2, 1fr); }
+      .telefonos { grid-template-columns: repeat(2, 1fr); }
+      .pasos { grid-template-columns: 1fr; gap: 32px; }
+      .alenort { padding: 40px 28px; }
+      .seccion { padding: 72px 0; }
+    }
+    @media (max-width: 560px) {
+      .funciones, .dolores { grid-template-columns: 1fr; }
+      .barra .btn span { display: none; }
+      .escena .telefono { right: -4px; width: 27%; border-width: 4px; border-radius: 16px; }
+      .capturas .telefono { right: -4px; width: 25%; border-width: 4px; border-radius: 16px; }
+      .escena .telefono img, .capturas .telefono img { border-radius: 12px; }
+      .telefonos { gap: 18px; }
+      .cifras { grid-template-columns: 1fr; }
+      .tarjeta-contacto { padding: 24px; }
+      .acciones .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="barra" id="barra">
+  <div class="contenedor">
+    <a href="#inicio" class="logo"><span class="marca">N</span> Nicode.js</a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#funciones">Qué hace</a>
+      <a href="#recorrido">Recorrido</a>
+      <a href="#alenort">Alenort</a>
+      <a href="#preguntas">Preguntas</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a class="btn btn-wa wa" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4z"/></svg>
+      <span>Escribime</span>
+    </a>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="contenedor">
+      <div class="revelar">
+        <span class="etiqueta">Sistema de gestión · Hecho en Tucumán</span>
+        <h1>Tu pollería ordenada, <em>sin cuaderno</em> y sin planillas.</h1>
+        <p class="lead">Ventas, stock, caja, cuentas corrientes y reparto en un solo sistema. Lo usás desde la computadora del local o desde el celular, y todas las computadoras ven lo mismo al instante.</p>
+        <div class="acciones">
+          <a class="btn btn-wa wa" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4z"/></svg>
+            Quiero verlo funcionando
+          </a>
+          <a class="btn btn-sec" href="#recorrido">Ver cómo funciona</a>
+        </div>
+        <div class="prueba-social"><span class="punto"></span><span>Funcionando todos los días en <b>Alenort</b>, distribuidora avícola de Tucumán.</span></div>
+      </div>
+      <div class="escena revelar">
+        <div class="notebook"><img src="img/inicio_pc.webp" alt="Pantalla de inicio del sistema con ventas del día, cuentas vencidas y cajas abiertas" width="1600" height="1000"></div>
+        <div class="telefono"><img src="img/facturar_cel.webp" alt="Facturación desde el celular" width="640" height="1385"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor centrado">
+      <span class="etiqueta">Lo que se termina</span>
+      <h2 class="titulo-seccion">Los problemas de siempre, resueltos de una vez</h2>
+      <div class="dolores">
+        <div class="dolor revelar"><div class="antes">Fiados anotados en la libreta</div><div class="ahora">Cada cliente con su saldo y vencimientos</div></div>
+        <div class="dolor revelar"><div class="antes">La caja que no cierra</div><div class="ahora">La caja se arma sola con las ventas</div></div>
+        <div class="dolor revelar"><div class="antes">Stock que nunca coincide</div><div class="ahora">Stock al instante en todas las PCs</div></div>
+        <div class="dolor revelar"><div class="antes">Boletas de reparto perdidas</div><div class="ahora">Pendientes hasta que se rinden</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion fondo-crema" id="funciones">
+    <div class="contenedor">
+      <span class="etiqueta">Qué hace</span>
+      <h2 class="titulo-seccion">Todo el negocio en un solo lugar</h2>
+      <p class="bajada">Pensado para el rubro: venta mayorista por unidad, mostrador por kilo, reparto y clientes en cuenta corriente.</p>
+      <div class="funciones">
+        <div class="funcion revelar"><div class="icono">🧾</div><h3>Facturación</h3><p>Factura A, B y C con factura electrónica de AFIP. Cuatro listas de precio por cliente.</p></div>
+        <div class="funcion revelar"><div class="icono">⚖️</div><h3>Venta por kilo</h3><p>Mostrador con códigos de balanza (PLU). El stock se descuenta en kilos.</p></div>
+        <div class="funcion revelar"><div class="icono">📦</div><h3>Stock en tiempo real</h3><p>Cada venta descuenta al instante en todas las computadoras. Kardex por producto.</p></div>
+        <div class="funcion revelar"><div class="icono">💵</div><h3>Caja por turno</h3><p>Efectivo, tarjeta, transferencias, gastos y retiros. Cierre con conteo de billetes.</p></div>
+        <div class="funcion revelar"><div class="icono">📒</div><h3>Cuentas corrientes</h3><p>Saldos, vencimientos, cobranzas y alertas de clientes atrasados o morosos.</p></div>
+        <div class="funcion revelar"><div class="icono">🚚</div><h3>Reparto</h3><p>Boletas pendientes hasta que el repartidor rinde: qué se cobró y qué volvió.</p></div>
+        <div class="funcion revelar"><div class="icono">🏭</div><h3>Compras y costos</h3><p>Remitos de proveedores con costo promedio real y pagos a proveedores.</p></div>
+        <div class="funcion revelar"><div class="icono">📊</div><h3>Reportes</h3><p>Ventas, ganancia por categoría, gastos, mejores clientes y exportación a Excel.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="recorrido">
+    <div class="contenedor">
+      <span class="etiqueta">Recorrido</span>
+      <h2 class="titulo-seccion">Mirá cómo es por dentro</h2>
+      <p class="bajada">Estas son pantallas reales del sistema, cargadas con datos de ejemplo. Tocá una captura para verla grande.</p>
+      <div class="pestanas" role="tablist" aria-label="Pantallas del sistema" id="pestanas"></div>
+      <div id="paneles"></div>
+    </div>
+  </section>
+
+  <section class="seccion fondo-crema">
+    <div class="contenedor centrado">
+      <span class="etiqueta">También en el celular</span>
+      <h2 class="titulo-seccion">El negocio en tu bolsillo</h2>
+      <p class="bajada">Mirá las ventas del día desde tu casa, facturá desde el depósito o hacé el conteo de stock recorriendo la heladera. Sin instalar nada: se abre en el navegador.</p>
+      <div class="telefonos">
+        <figure class="revelar"><div class="telefono"><img src="img/inicio_cel.webp" alt="Inicio en el celular" loading="lazy" width="640" height="1385"></div><figcaption>Ventas del día</figcaption></figure>
+        <figure class="revelar"><div class="telefono"><img src="img/facturar_minorista_cel.webp" alt="Venta por kilo en el celular" loading="lazy" width="640" height="1385"></div><figcaption>Venta por kilo</figcaption></figure>
+        <figure class="revelar"><div class="telefono"><img src="img/caja_cel.webp" alt="Caja del turno en el celular" loading="lazy" width="640" height="1385"></div><figcaption>Caja del turno</figcaption></figure>
+        <figure class="revelar"><div class="telefono"><img src="img/stock_fisico_cel.webp" alt="Conteo de stock en el celular" loading="lazy" width="640" height="1385"></div><figcaption>Conteo de stock</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="alenort">
+    <div class="contenedor">
+      <div class="alenort revelar">
+        <div>
+          <span class="etiqueta">La prueba</span>
+          <h2>Lo hicimos para nuestro propio negocio</h2>
+          <p>En Alenort teníamos los mismos problemas que cualquier pollería: fiados en el cuaderno, cajas que no cerraban y stock que nunca coincidía. Con Nicode.js armamos este sistema a la medida del rubro.</p>
+          <p>Hoy maneja todo el negocio todos los días: varias computadoras y celulares facturando al mismo tiempo, mayorista y mostrador, reparto y cuentas corrientes.</p>
+        </div>
+        <div class="cifras">
+          <div class="cifra"><b>Todos los días</b><span>en uso real, en mostrador y depósito</span></div>
+          <div class="cifra"><b>Varias PCs</b><span>facturando a la vez, con el mismo stock</span></div>
+          <div class="cifra"><b>PC y celular</b><span>la misma información en todos lados</span></div>
+          <div class="cifra"><b>En la nube</b><span>cada venta queda guardada al instante</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion fondo-crema">
+    <div class="contenedor centrado">
+      <span class="etiqueta">Cómo arrancamos</span>
+      <h2 class="titulo-seccion">Empezar es simple</h2>
+      <div class="pasos">
+        <div class="paso revelar"><h3>Te lo muestro</h3><p>Pasás por Alenort y lo ves funcionando en un negocio real, o lo vemos juntos en tu local.</p></div>
+        <div class="paso revelar"><h3>Cargamos tu negocio</h3><p>Tus productos, precios, clientes y saldos. Así arrancás con todo listo.</p></div>
+        <div class="paso revelar"><h3>Te acompaño</h3><p>Te enseño a vos y a tus empleados a usarlo, y quedo a mano para lo que necesites.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="preguntas">
+    <div class="contenedor centrado">
+      <span class="etiqueta">Preguntas</span>
+      <h2 class="titulo-seccion">Lo que todos preguntan</h2>
+      <div class="preguntas" style="text-align:left">
+        <details><summary>¿Tengo que instalar algo?</summary><p>No. Se usa desde el navegador, en cualquier computadora o celular. Entrás con tu usuario y contraseña.</p></details>
+        <details><summary>¿Puedo usarlo en varias computadoras a la vez?</summary><p>Sí. Varias computadoras y celulares pueden facturar al mismo tiempo, y el stock y la caja se actualizan en todas al instante.</p></details>
+        <details><summary>¿Hace factura electrónica?</summary><p>Sí, factura A y B electrónica con AFIP, y también comprobantes C de uso interno.</p></details>
+        <details><summary>¿Sirve para venta por kilo con balanza?</summary><p>Sí. El mostrador trabaja con códigos de balanza (PLU) y descuenta el stock en kilos.</p></details>
+        <details><summary>¿Qué pasa si se corta internet?</summary><p>Sin internet no se puede facturar, porque cada venta se guarda en la nube en el momento. Lo bueno es que nada queda a medias: si la venta no se pudo guardar, el sistema te avisa, no imprime el ticket y te deja el carrito armado para facturarla cuando vuelva la conexión, sin duplicarla.</p></details>
+        <details><summary>¿Mis empleados ven todo?</summary><p>No. Cada empleado entra con su usuario y ve solo las pantallas que le habilitás.</p></details>
+        <details><summary>¿Cuánto cuesta?</summary><p>Depende del tamaño de tu negocio y de cuántos locales tengas. Escribime y lo charlamos sin compromiso.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion fondo-crema" id="contacto">
+    <div class="contenedor contacto">
+      <div class="revelar">
+        <span class="etiqueta">Contacto</span>
+        <h2 class="titulo-seccion">¿Lo vemos funcionando?</h2>
+        <p class="bajada">Escribime por WhatsApp y coordinamos. Te lo muestro en Alenort o en tu local, sin compromiso.</p>
+        <div class="acciones" style="margin-top:28px">
+          <a class="btn btn-wa wa" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4z"/></svg>
+            Escribime por WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="tarjeta-contacto revelar">
+        <h3>Nicolás Alurralde</h3>
+        <div class="cargo">Nicode.js · Desarrollo de software · Alenort</div>
+        <a class="dato wa" href="#" target="_blank" rel="noopener">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="#1f9d55" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4z"/></svg></span>
+          <span><small>WhatsApp</small><b>+54 9 381 550-7992</b></span>
+        </a>
+        <a class="dato" href="mailto:nicolasalurralde39@gmail.com?subject=Consulta%20por%20el%20sistema%20de%20gesti%C3%B3n">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5413" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+          <span><small>Email</small><b>nicolasalurralde39@gmail.com</b></span>
+        </a>
+        <div class="dato">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5413" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
+          <span><small>Ubicación</small><b>Tucumán, Argentina</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="contenedor">
+    <span>© <span id="anio">2026</span> Nicode.js · Tucumán, Argentina</span>
+    <span>Las capturas muestran el sistema real con datos de ejemplo.</span>
+  </div>
+</footer>
+
+<a class="wa-flotante wa" href="#" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4z"/></svg>
+</a>
+
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Captura ampliada">
+  <button type="button" aria-label="Cerrar">×</button>
+  <img alt="">
+</div>
+
+<script>
+  // WhatsApp con mensaje armado
+  const WA = 'https://wa.me/5493815507992?text=' + encodeURIComponent('Hola Nicolás, vi la página del sistema de gestión y me gustaría verlo funcionando.');
+  document.querySelectorAll('a.wa').forEach(a => a.href = WA);
+  document.getElementById('anio').textContent = new Date().getFullYear();
+
+  // Recorrido por pantallas
+  const PANTALLAS = [
+    { id: 'facturar', nombre: 'Facturar', titulo: 'Facturar en segundos', texto: 'Buscás el cliente, escaneás o escribís el producto y listo. Cada cliente tiene su lista de precios.',
+      puntos: ['Factura A, B y C, electrónica con AFIP', 'Contado, tarjeta, transferencia o cuenta corriente', 'Pagos combinados, descuentos e interés'], pc: 'facturar_pc', cel: 'facturar_cel' },
+    { id: 'kilo', nombre: 'Mostrador por kilo', titulo: 'Venta al público por kilo', texto: 'Productos con código de balanza (PLU). El stock del mostrador se descuenta en kilos.',
+      puntos: ['Búsqueda por PLU o por nombre', 'Precio por kilo con decimales', 'Ticket para el cliente'], pc: 'facturar_minorista_pc', cel: 'facturar_minorista_cel' },
+    { id: 'caja', nombre: 'Caja', titulo: 'Caja sin sorpresas', texto: 'La caja suma sola todo lo vendido en el turno. Al cerrar contás los billetes y el sistema te dice si sobra o falta.',
+      puntos: ['Turno mañana y tarde', 'Gastos y retiros a administración', 'Historial de cajas por día'], pc: 'caja_pc', cel: 'caja_cel' },
+    { id: 'reparto', nombre: 'Reparto', titulo: 'Reparto y rendición', texto: 'Las boletas del reparto quedan pendientes hasta que el repartidor rinde. Ves qué se cobró, qué volvió y quién quedó debiendo.',
+      puntos: ['Aceptar, rechazar o devolver en parte', 'Control del cierre de reparto', 'Envíos del mostrador'], pc: 'reparto_pc', cel: 'reparto_cel' },
+    { id: 'cuentas', nombre: 'Cuentas corrientes', titulo: 'Fiados al día', texto: 'Cada cliente con su saldo, vencimientos e historial. De un vistazo sabés quién está al día, atrasado o moroso.',
+      puntos: ['Calendario de vencimientos', 'Clientes atrasados y morosos', 'Registro de pagos y estado de cuenta'], pc: 'cobranzas_fichas_pc', cel: 'cobranzas_fichas_cel' },
+    { id: 'clientes', nombre: 'Clientes', titulo: 'Conocé a tus clientes', texto: 'Quién te compra más, cada cuánto, cuánto debe y cuándo fue su última compra. Filtrás por mes, año o fechas.',
+      puntos: ['Ranking de los que más compran', 'Historial de facturas por cliente', 'Saldo de cuenta corriente'], pc: 'clientes_ranking_pc', cel: 'cliente_detalle_cel' },
+    { id: 'stock', nombre: 'Stock', titulo: 'Stock en tiempo real', texto: 'Cada venta, compra o traspaso mueve el stock al instante, en todas las computadoras a la vez.',
+      puntos: ['Varios depósitos y sucursales', 'Kardex con cada movimiento', 'Valorización del stock'], pc: 'stock_depositos_pc', cel: 'stock_depositos_cel' },
+    { id: 'conteo', nombre: 'Conteo físico', titulo: 'Conteo desde el celular', texto: 'Los chicos recorren el depósito y cargan lo que cuentan. Vos lo revisás y lo aplicás: el stock queda igual a lo que hay.',
+      puntos: ['Listado por sección', 'Revisión antes de aplicar', 'Lo que no se contó, en cero'], pc: 'stock_fisico_pc', cel: 'stock_fisico_cel' },
+    { id: 'compras', nombre: 'Compras', titulo: 'Compras y costos reales', texto: 'Cargás el remito del proveedor y la mercadería entra al stock. El costo se promedia con lo que ya tenías.',
+      puntos: ['Historial de remitos', 'Costo promedio ponderado', 'Pagos y saldo con cada proveedor'], pc: 'compras_pc' },
+    { id: 'reportes', nombre: 'Reportes', titulo: 'Ventas y ganancia', texto: 'Cuánto vendiste y cuánto ganaste, por categoría de producto y en el período que quieras.',
+      puntos: ['Rendimiento y utilidad', 'Ventas con filtros', 'Exportación a Excel'], pc: 'utilidad_pc', cel: 'consultas_ventas_cel' },
+    { id: 'precios', nombre: 'Precios', titulo: 'Precios y productos', texto: 'Lista de precios para imprimir, aumentos masivos por porcentaje y cuatro listas de precio por producto.',
+      puntos: ['Aumentos por porcentaje', 'Lista de precios imprimible', 'Excel para trabajar los aumentos'], pc: 'lista_precios_pc' }
+  ];
+  const pestanas = document.getElementById('pestanas');
+  const paneles = document.getElementById('paneles');
+  PANTALLAS.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.className = 'pestana'; b.type = 'button'; b.role = 'tab'; b.id = 'tab-' + p.id;
+    b.setAttribute('aria-controls', 'panel-' + p.id); b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    b.textContent = p.nombre;
+    b.addEventListener('click', () => mostrar(p.id));
+    pestanas.appendChild(b);
+    const d = document.createElement('div');
+    d.className = 'panel' + (i === 0 ? ' activo' : ''); d.id = 'panel-' + p.id; d.role = 'tabpanel';
+    d.innerHTML = `<div><h3>${p.titulo}</h3><p>${p.texto}</p><ul>${p.puntos.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <div class="capturas"><div class="pc"><img src="img/${p.pc}.webp" alt="${p.titulo} en la computadora" loading="lazy" width="1600" height="1000"></div>
+      ${p.cel ? `<div class="telefono"><img src="img/${p.cel}.webp" alt="${p.titulo} en el celular" loading="lazy" width="640" height="1385"></div>` : ''}</div>`;
+    paneles.appendChild(d);
+  });
+  function mostrar(id) {
+    document.querySelectorAll('.pestana').forEach(b => b.setAttribute('aria-selected', String(b.id === 'tab-' + id)));
+    document.querySelectorAll('.panel').forEach(d => d.classList.toggle('activo', d.id === 'panel-' + id));
+  }
+
+  // Visor de capturas
+  const visor = document.getElementById('visor'), visorImg = visor.querySelector('img');
+  document.addEventListener('click', e => {
+    const img = e.target.closest('.capturas img, .telefonos img, .escena img');
+    if (img) { visorImg.src = img.src; visorImg.alt = img.alt; visor.classList.add('abierto'); return; }
+    if (visor.classList.contains('abierto') && (e.target === visor || e.target.closest('.visor button'))) visor.classList.remove('abierto');
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') visor.classList.remove('abierto'); });
+
+  // Borde del encabezado al bajar y aparición suave de las secciones
+  const barra = document.getElementById('barra');
+  addEventListener('scroll', () => barra.classList.toggle('con-borde', scrollY > 8), { passive: true });
+  const obs = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('visible'); obs.unobserve(x.target); } }), { threshold: .12 });
+  document.querySelectorAll('.revelar').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
