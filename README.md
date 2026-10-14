@@ -1,6 +1,6 @@
 # Nicode.js · Página del sistema de gestión
 
-Página de venta del sistema de gestión para pollerías y distribuidoras. Es un sitio estático: `index.html` y la carpeta `img/`, sin nada que compilar.
+Página de venta del sistema de gestión para distribuidoras, pollerías, carnicerías y otros rubros. Es un sitio estático: `index.html` y la carpeta `img/`, sin nada que compilar.
 
 ## Publicarla gratis con GitHub Pages
 
